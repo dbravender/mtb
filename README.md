@@ -203,16 +203,19 @@ Running mtb on itself:
 
 | Language | Files | Code | Complexity |
 |----------|-------|------|------------|
-| Go       | 9     | 510  | 133        |
-| YAML     | 3     | 78   | 0          |
-| Markdown | 1     | 65   | 0          |
+| Go       | 11    | 766  | 189        |
+| YAML     | 3     | 82   | 0          |
+| Markdown | 1     | 156  | 0          |
+| Makefile | 1     | 14   | 0          |
 | License  | 1     | 17   | 0          |
 
-Estimated cost: $21,316 | People: 0.59 | Schedule: 3.2 months
+Estimated cost: $28,008 | People: 0.70 | Schedule: 3.5 months
 
-**deps:** 573 packages detected
+**deps:** 644 packages detected
 
-`mtb` ships with 573 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 5 source files, 300 lines of production code, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
+`mtb` ships with 644 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 6 source files, ~400 lines of production code, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
+
+**checklist:** When run on itself, mtb scores well — CI enforces `go vet`, `govulncheck`, build, and tests on every push; releases are fully automated via tag-triggered cross-compilation; and documentation covers every tool and 7 editor integrations. Monitoring and on-call don't apply to a local CLI tool.
 
 ## License
 
