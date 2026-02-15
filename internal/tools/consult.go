@@ -5,12 +5,10 @@ package tools
 import (
 	"context"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/anchore/syft/syft"
-	"github.com/google/go-github/v82/github"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	_ "modernc.org/sqlite"
 )
@@ -22,19 +20,15 @@ type ConsultInput struct {
 }
 
 type ConsultOutput struct {
-	ExistingSolutions []RepoResult  `json:"existingSolutions"`
-	ExistingDeps      []PackageInfo `json:"existingDeps"`
-	Questions         []string      `json:"questions"`
-	Guidance          string        `json:"guidance"`
+	ExistingDeps []PackageInfo `json:"existingDeps"`
+	Questions    []string      `json:"questions"`
+	Guidance     string        `json:"guidance"`
 }
 
 func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultInput) (*mcp.CallToolResult, ConsultOutput, error) {
 	if input.Problem == "" {
 		return ErrResult[ConsultOutput]("problem is required")
 	}
-
-	// Search GitHub for existing solutions
-	solutions := searchForSolutions(ctx, input.Problem, input.Language)
 
 	// Scan for existing dependencies if path provided
 	var relevantDeps []PackageInfo
@@ -43,25 +37,22 @@ func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultI
 	}
 
 	// Build contextualized 5 whys questions
-	questions := buildQuestions(input.Problem, solutions, relevantDeps)
+	questions := buildQuestions(input.Problem, relevantDeps)
 
 	guidance := "IMPORTANT: Present each question above to the user and wait for their answers before proceeding. " +
 		"Do NOT skip questions or assume answers. The goal is to ensure the right problem is being solved " +
 		"with the right approach before any code is written. " +
-		"ALSO: Use the search tool to find existing open-source projects, libraries, or SaaS products that already solve this problem. " +
+		"ALSO: Search the web for existing open-source projects, libraries, and SaaS products that already solve this problem. " +
 		"Present what you find to the user as alternatives before writing any code. " +
-		"Do this even if existingSolutions above is empty — the search may have failed due to rate limiting or query mismatch. " +
 		"Use your own knowledge of the problem domain to suggest well-known alternatives as well."
 
 	output := ConsultOutput{
-		ExistingSolutions: solutions,
-		ExistingDeps:      relevantDeps,
-		Questions:         questions,
-		Guidance:          guidance,
+		ExistingDeps: relevantDeps,
+		Questions:    questions,
+		Guidance:     guidance,
 	}
 
 	summary := fmt.Sprintf("Consultation for: %q\n", input.Problem)
-	summary += fmt.Sprintf("Found %d existing solutions on GitHub.\n", len(solutions))
 	if len(relevantDeps) > 0 {
 		summary += fmt.Sprintf("Found %d potentially relevant dependencies already in your project.\n", len(relevantDeps))
 	}
@@ -70,53 +61,6 @@ func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultI
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{&mcp.TextContent{Text: summary}},
 	}, output, nil
-}
-
-func searchForSolutions(ctx context.Context, problem, language string) []RepoResult {
-	query := problem
-	if language != "" {
-		query += " language:" + language
-	}
-	query += " fork:false"
-
-	client := github.NewClient(nil)
-	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
-		client = client.WithAuthToken(token)
-	}
-
-	result, _, err := client.Search.Repositories(ctx, query, &github.SearchOptions{
-		Sort:  "stars",
-		Order: "desc",
-		ListOptions: github.ListOptions{
-			PerPage: 5,
-		},
-	})
-	if err != nil {
-		return nil
-	}
-
-	var repos []RepoResult
-	for _, r := range result.Repositories {
-		repo := RepoResult{
-			Name:     r.GetName(),
-			FullName: r.GetFullName(),
-			URL:      r.GetHTMLURL(),
-			Stars:    r.GetStargazersCount(),
-			Language: r.GetLanguage(),
-			Topics:   r.Topics,
-		}
-		if desc := r.GetDescription(); desc != "" {
-			if len(desc) > 200 {
-				desc = desc[:200] + "..."
-			}
-			repo.Description = desc
-		}
-		if t := r.GetUpdatedAt(); !t.IsZero() {
-			repo.UpdatedAt = t.Format("2006-01-02")
-		}
-		repos = append(repos, repo)
-	}
-	return repos
 }
 
 func findRelevantDeps(ctx context.Context, path, problem string) []PackageInfo {
@@ -189,19 +133,10 @@ func extractKeywords(problem string) []string {
 	return keywords
 }
 
-func buildQuestions(problem string, solutions []RepoResult, deps []PackageInfo) []string {
+func buildQuestions(problem string, deps []PackageInfo) []string {
 	questions := []string{
 		fmt.Sprintf("What is the actual problem you are trying to solve? (Restate the root cause behind %q)", problem),
-	}
-
-	if len(solutions) > 0 {
-		top := solutions[0]
-		questions = append(questions,
-			fmt.Sprintf("Why can't %s (%d stars, %s) solve this? What's missing or different about your needs?",
-				top.FullName, top.Stars, top.URL))
-	} else {
-		questions = append(questions,
-			"No well-known existing solutions were found. Is this truly a novel problem, or should we search differently?")
+		"Search for existing SaaS products and open-source projects that solve this problem. What did you find, and why can't any of them work?",
 	}
 
 	if len(deps) > 0 {

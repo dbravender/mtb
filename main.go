@@ -40,13 +40,8 @@ func main() {
 	}, tools.HandleDeps)
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "search",
-		Description: "Search GitHub for existing libraries, tools, and frameworks. Use this BEFORE writing new code to check if a battle-tested solution already exists. Returns repositories sorted by stars with descriptions, URLs, and topics. IMPORTANT: When a user asks you to build something that sounds like a common problem (HTTP client, date parser, auth system, testing framework, etc.), search first. If a well-maintained library with thousands of stars already solves the problem, suggest it instead of writing code from scratch. If the search returns no results, try different search terms — the problem is almost certainly not novel. Also use your own knowledge to suggest well-known alternatives, SaaS products, or open-source projects that solve the same problem.",
-	}, tools.HandleSearch)
-
-	mcp.AddTool(server, &mcp.Tool{
 		Name:        "consult",
-		Description: "Get a structured consultation before implementing a new feature or adding a dependency. Use this BEFORE writing any new feature code. Takes a problem description, searches GitHub for existing solutions, scans the project for relevant existing dependencies, and returns a set of questions the agent MUST present to the user before proceeding. IMPORTANT: When a user asks you to build something non-trivial, call consult first. Present each returned question to the user and wait for their answers. Do NOT skip questions or proceed until the user has considered the tradeoffs.",
+		Description: "Get a structured consultation before implementing a new feature or adding a dependency. Use this BEFORE writing any new feature code. Takes a problem description, scans the project for relevant existing dependencies, and returns a set of questions the agent MUST present to the user before proceeding. IMPORTANT: When a user asks you to build something non-trivial, call consult first. Present each returned question to the user and wait for their answers. Do NOT skip questions or proceed until the user has considered the tradeoffs.",
 	}, tools.HandleConsult)
 
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {

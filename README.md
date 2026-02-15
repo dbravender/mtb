@@ -3,7 +3,6 @@
 `mtb` is an MCP server that intends to help agents and engineers look before they leap by using the Socratic method to help users ask the right questions when building software and nudge them to use existing battle-tested solutions so the focus can remain on solving novel problems.
 
 - `consult`: Push back on new features with structured questions before any code gets written
-- `search`: Search for existing libraries rather than reinventing the wheel
 - `stats`: Show complexity scores so users can weigh changes against future maintenance costs
 - `deps`: Know what's already in your project before adding more
 
@@ -74,17 +73,6 @@ Scans a directory for dependencies using [Syft](https://github.com/anchore/syft)
 **Parameters:**
 - `path` - directory to scan
 - `details` - include line count and complexity per dependency (default: false)
-
-### `search`
-
-Searches GitHub for existing libraries, tools, and frameworks. Use this before writing new code to check if a battle-tested solution already exists. Returns repositories sorted by stars with descriptions, URLs, and topics.
-
-**Parameters:**
-- `query` - search query describing what you need (e.g. "json schema validator python")
-- `language` - filter by programming language (e.g. "go", "python", "javascript")
-- `max_results` - maximum number of results to return (default: 10, max: 25)
-
-Set `GITHUB_TOKEN` for higher rate limits (30 req/min authenticated vs 10 req/min unauthenticated).
 
 ## Install
 
@@ -209,8 +197,6 @@ Estimated cost: $21,316 | People: 0.59 | Schedule: 3.2 months
 **deps:** 573 packages detected
 
 `mtb` ships with 573 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 5 source files, 300 lines of production code, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
-
-**search:** `"MCP code analysis"` — 346 results, but focused on code graphs, SAST, and security scanning. None combining dependency awareness, complexity metrics, and existing solution search. Looks like the bed needed making. If you are aware of other tools like this, please let me know!
 
 ## License
 

@@ -22,7 +22,7 @@ func TestHandleConsult_EmptyProblem(t *testing.T) {
 }
 
 func TestHandleConsult_ProblemOnly(t *testing.T) {
-	// Without a path, should still return questions and attempt search
+	// Without a path, should still return questions
 	_, output, err := HandleConsult(context.Background(), &mcp.CallToolRequest{}, ConsultInput{
 		Problem: "parse JSON",
 	})
@@ -117,30 +117,14 @@ func TestExtractKeywords(t *testing.T) {
 	}
 }
 
-func TestBuildQuestions_WithSolutions(t *testing.T) {
-	solutions := []RepoResult{
-		{FullName: "user/repo", Stars: 1000, URL: "https://github.com/user/repo"},
-	}
-	questions := buildQuestions("parse JSON", solutions, nil)
-
-	if len(questions) != 7 {
-		t.Fatalf("expected 7 questions, got %d", len(questions))
-	}
-
-	// Second question should reference the top solution
-	if q := questions[1]; q == "" {
-		t.Fatal("expected non-empty second question")
-	}
-}
-
 func TestBuildQuestions_NoSolutions(t *testing.T) {
-	questions := buildQuestions("parse JSON", nil, nil)
+	questions := buildQuestions("parse JSON", nil)
 
 	if len(questions) != 7 {
 		t.Fatalf("expected 7 questions, got %d", len(questions))
 	}
 
-	// Second question should mention no solutions found
+	// Second question should ask to search for alternatives
 	if q := questions[1]; q == "" {
 		t.Fatal("expected non-empty second question")
 	}
@@ -150,7 +134,7 @@ func TestBuildQuestions_WithDeps(t *testing.T) {
 	deps := []PackageInfo{
 		{Name: "encoding/json"},
 	}
-	questions := buildQuestions("parse JSON", nil, deps)
+	questions := buildQuestions("parse JSON", deps)
 
 	if len(questions) != 7 {
 		t.Fatalf("expected 7 questions, got %d", len(questions))
