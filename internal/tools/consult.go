@@ -214,6 +214,8 @@ func buildQuestions(problem string, solutions []RepoResult, deps []PackageInfo) 
 	}
 
 	questions = append(questions,
+		"Are you sure you are solving the right problem?",
+		"Have you spoken to another engineer about this problem and the solution you are working on?",
 		"What is the maintenance cost of building this yourself vs. using an existing solution?",
 		"If you build this, who will maintain it when the requirements change?",
 	)

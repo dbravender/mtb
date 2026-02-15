@@ -30,8 +30,8 @@ func TestHandleConsult_ProblemOnly(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if len(output.Questions) < 5 {
-		t.Fatalf("expected at least 5 questions, got %d", len(output.Questions))
+	if len(output.Questions) < 7 {
+		t.Fatalf("expected at least 7 questions, got %d", len(output.Questions))
 	}
 	if output.Guidance == "" {
 		t.Fatal("expected guidance to be non-empty")
@@ -57,8 +57,8 @@ func TestHandleConsult_WithPath(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if len(output.Questions) < 5 {
-		t.Fatalf("expected at least 5 questions, got %d", len(output.Questions))
+	if len(output.Questions) < 7 {
+		t.Fatalf("expected at least 7 questions, got %d", len(output.Questions))
 	}
 
 	// "requests" should match keyword "requests" from the problem
@@ -123,8 +123,8 @@ func TestBuildQuestions_WithSolutions(t *testing.T) {
 	}
 	questions := buildQuestions("parse JSON", solutions, nil)
 
-	if len(questions) != 5 {
-		t.Fatalf("expected 5 questions, got %d", len(questions))
+	if len(questions) != 7 {
+		t.Fatalf("expected 7 questions, got %d", len(questions))
 	}
 
 	// Second question should reference the top solution
@@ -136,8 +136,8 @@ func TestBuildQuestions_WithSolutions(t *testing.T) {
 func TestBuildQuestions_NoSolutions(t *testing.T) {
 	questions := buildQuestions("parse JSON", nil, nil)
 
-	if len(questions) != 5 {
-		t.Fatalf("expected 5 questions, got %d", len(questions))
+	if len(questions) != 7 {
+		t.Fatalf("expected 7 questions, got %d", len(questions))
 	}
 
 	// Second question should mention no solutions found
@@ -152,8 +152,8 @@ func TestBuildQuestions_WithDeps(t *testing.T) {
 	}
 	questions := buildQuestions("parse JSON", nil, deps)
 
-	if len(questions) != 5 {
-		t.Fatalf("expected 5 questions, got %d", len(questions))
+	if len(questions) != 7 {
+		t.Fatalf("expected 7 questions, got %d", len(questions))
 	}
 
 	// Third question should mention the dep
