@@ -68,6 +68,86 @@ Add to `.claude/mcp.json` in your project (or `~/.claude/mcp.json` globally):
 }
 ```
 
+### Cursor
+
+Add to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "mtb": {
+      "command": "mtb"
+    }
+  }
+}
+```
+
+### Windsurf
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "mtb": {
+      "command": "mtb"
+    }
+  }
+}
+```
+
+### VS Code (Copilot)
+
+Add to `.vscode/mcp.json` in your workspace:
+
+```json
+{
+  "servers": {
+    "mtb": {
+      "type": "stdio",
+      "command": "mtb"
+    }
+  }
+}
+```
+
+### Cline
+
+Open Cline settings in VS Code, click "MCP Servers", then "Configure MCP Servers" and add:
+
+```json
+{
+  "mcpServers": {
+    "mtb": {
+      "command": "mtb"
+    }
+  }
+}
+```
+
+### OpenAI Codex
+
+Add to `~/.codex/config.toml` (or `.codex/config.toml` in your project):
+
+```toml
+[mcp_servers.mtb]
+command = "mtb"
+```
+
+### Gemini CLI
+
+Add to `~/.gemini/settings.json` (or `.gemini/settings.json` in your project):
+
+```json
+{
+  "mcpServers": {
+    "mtb": {
+      "command": "mtb"
+    }
+  }
+}
+```
+
 ### Build from source
 
 ```
