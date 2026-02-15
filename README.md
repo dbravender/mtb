@@ -1,10 +1,22 @@
 # mtb (Make the Bed)
 
+`mtb` is an MCP server that intends to help agents and engineers look before they leap by leveraging existing battle-tested solutions so the focus can remain on the problem at hand.
+
+- `search`: Search for existing libraries rather than reinventing the wheel
+- `stats`: Track complexity costs to keep maintenance costs from ballooning
+- `deps`: Know what's already in your project before adding more
+
 In a Calvin and Hobbes strip, Calvin's mom tells him to make his bed. Rather than just do it, he spends the entire day building a robot to make the bed for him. The robot doesn't work, the bed never gets made, and Calvin is more exhausted than if he'd just done it himself.
 
-This is vibe coding in a nutshell. An AI agent will happily generate a JSON parser from scratch when you already have three in your dependencies, or add a new HTTP client library when one is sitting right there in your lock file. mtb is an MCP server that makes agents look before they leap — checking what code and dependencies already exist before generating more.
+Most of the energy that goes into software is spent on debugging and maintenance. Metrics such as [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity) and [COCOMO](https://en.wikipedia.org/wiki/COCOMO) are the subject of much debate but they do give engineers a rough idea of how much it would have cost to build and therefore maintain the software on which they are working.
+
+AI agents will happily generate a bug-filled JSON parser from scratch when you already have three in your dependencies, or add a new HTTP client library when one is sitting right there in your lock file. And, if you ask it to build a rocketship when a perfectly cromulent open source rocketship is there for the taking, AI will happily help you build a new one.
+
+The hope is that, rather than fixing bugs or going down rabbit holes in bespoke implementations, `mtb` can help agents and engineers focus on the actual problem they are trying to solve: making the bed, and externalize some of the maintenance costs which can be massive for software.
 
 ## Tools
+
+These tools are intended for use by AI agents.
 
 ### `stats`
 
@@ -79,7 +91,9 @@ Estimated cost: $10,810 | People: 0.39 | Schedule: 2.5 months
 
 **deps:** 571 packages detected
 
-Yes, a tool designed to warn about unnecessary dependencies ships with 571 transitive Go modules. The irony is not lost on me. Syft alone accounts for the vast majority — it brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. The tradeoff: 5 files of code, 292 lines, covers every ecosystem from npm to RPM. I'd rather import a battle-tested SBOM generator than write my own package-lock.json parser.
+`mtb` ships with 571 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 5 files of code, 292 lines, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
+
+**search:** `"MCP code analysis"` — 346 results, but focused on code graphs, SAST, and security scanning. None combining dependency awareness, complexity metrics, and existing solution search. Looks like the bed needed making. If you are aware of other tools like this, please let me know!
 
 ## License
 
