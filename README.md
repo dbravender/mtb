@@ -26,6 +26,17 @@ Scans a directory for dependencies using [Syft](https://github.com/anchore/syft)
 - `path` - directory to scan
 - `details` - include line count and complexity per dependency (default: false)
 
+### `search`
+
+Searches GitHub for existing libraries, tools, and frameworks. Use this before writing new code to check if a battle-tested solution already exists. Returns repositories sorted by stars with descriptions, URLs, and topics.
+
+**Parameters:**
+- `query` - search query describing what you need (e.g. "json schema validator python")
+- `language` - filter by programming language (e.g. "go", "python", "javascript")
+- `max_results` - maximum number of results to return (default: 10, max: 25)
+
+Set `GITHUB_TOKEN` for higher rate limits (30 req/min authenticated vs 10 req/min unauthenticated).
+
 ## Install
 
 Download the binary for your platform from the [latest release](https://github.com/dbravender/mtb/releases/latest) and place it somewhere on your `$PATH`.
@@ -59,14 +70,16 @@ Running mtb on itself:
 
 | Language | Files | Code | Complexity |
 |----------|-------|------|------------|
-| Go       | 1     | 176  | 40         |
-| JSON     | 3     | 16   | 0          |
+| Go       | 5     | 292  | 59         |
+| Markdown | 1     | 57   | 0          |
+| YAML     | 1     | 52   | 0          |
+| License  | 1     | 17   | 0          |
 
-Estimated cost: $4,776 | People: 0.24 | Schedule: 1.8 months
+Estimated cost: $10,810 | People: 0.39 | Schedule: 2.5 months
 
-**deps:** 564 packages detected
+**deps:** 571 packages detected
 
-Yes, a tool designed to warn about unnecessary dependencies ships with 564 transitive Go modules. The irony is not lost on me. Syft alone accounts for the vast majority — it brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. The tradeoff: 1 file of code, 176 lines, covers every ecosystem from npm to RPM. I'd rather import a battle-tested SBOM generator than write my own package-lock.json parser.
+Yes, a tool designed to warn about unnecessary dependencies ships with 571 transitive Go modules. The irony is not lost on me. Syft alone accounts for the vast majority — it brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. The tradeoff: 5 files of code, 292 lines, covers every ecosystem from npm to RPM. I'd rather import a battle-tested SBOM generator than write my own package-lock.json parser.
 
 ## License
 
