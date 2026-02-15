@@ -82,16 +82,16 @@ Running mtb on itself:
 
 | Language | Files | Code | Complexity |
 |----------|-------|------|------------|
-| Go       | 5     | 292  | 59         |
-| Markdown | 1     | 57   | 0          |
-| YAML     | 1     | 52   | 0          |
+| Go       | 9     | 510  | 133        |
+| YAML     | 3     | 78   | 0          |
+| Markdown | 1     | 65   | 0          |
 | License  | 1     | 17   | 0          |
 
-Estimated cost: $10,810 | People: 0.39 | Schedule: 2.5 months
+Estimated cost: $21,316 | People: 0.59 | Schedule: 3.2 months
 
-**deps:** 571 packages detected
+**deps:** 573 packages detected
 
-`mtb` ships with 571 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 5 files of code, 292 lines, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
+`mtb` ships with 573 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 5 source files, 300 lines of production code, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
 
 **search:** `"MCP code analysis"` — 346 results, but focused on code graphs, SAST, and security scanning. None combining dependency awareness, complexity metrics, and existing solution search. Looks like the bed needed making. If you are aware of other tools like this, please let me know!
 

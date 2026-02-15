@@ -5,17 +5,26 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/dbravender/mtb/internal/tools"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
+var version = "0.3.0"
+
 func main() {
+	if len(os.Args) == 2 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
+		fmt.Println("mtb " + version)
+		return
+	}
+
 	server := mcp.NewServer(
 		&mcp.Implementation{
 			Name:    "mtb",
-			Version: "0.3.0",
+			Version: version,
 		},
 		nil,
 	)

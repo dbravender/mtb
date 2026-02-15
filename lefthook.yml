@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    vet:
+      run: go vet ./...
+    build:
+      run: go build ./...
+    test:
+      run: go test ./... -count=1
