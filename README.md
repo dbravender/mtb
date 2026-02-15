@@ -45,15 +45,30 @@ Get a structured consultation before implementing a new feature or adding a depe
 
 **Example:** "I'd like to make a production-ready tool that recursively counts words in files and supports all languages"
 
-mtb pushes back — and rightly so. Before writing any code, the agent presents these questions:
-
-1. **What's the actual problem you're trying to solve?** "Count words in files" is a solution, not a problem. What's driving this? Documentation metrics? Codebase analysis? Something else?
-2. **Is this truly novel?** `wc -w` already recursively counts words (`find . -type f -exec wc -w {} +`). Tools like tokei and scc do sophisticated file analysis across languages. What would your tool do that these don't?
-3. **Is there something already in your stack that could be extended?** Rather than building from scratch, could an existing tool or script cover this?
-4. **What's the maintenance cost?** "Supports all languages" is a huge surface area — word boundaries differ across CJK, Thai, Arabic, etc. Are you prepared to maintain Unicode segmentation logic long-term?
-5. **Who maintains this when requirements change?** If this needs to be "production-ready," who owns it after v1?
-
-These aren't meant to block you — they're meant to make sure you're building the right thing.
+> Here are some questions to work through before we write any code:
+>
+> 1. **What's the actual problem you're trying to solve?**
+>    What's the root cause behind wanting to count words recursively in files? Is this for analyzing a codebase, tracking documentation size, something else?
+>
+> 2. **Have you considered existing tools?**
+>    There are well-known alternatives already available:
+>    - `wc -w` — built-in Unix tool; `find . -type f -exec cat {} + | wc -w` does recursive word counting in one line
+>    - `tokei` / `scc` — if you're counting code metrics (lines, complexity, etc.)
+>    - `cloc` — another code counting tool
+>    - `fd` + `wc` — `fd -t f -x wc -w` for a friendlier find alternative
+>
+>    Any reason these won't work for your use case?
+>
+> 3. **Are you sure there isn't an existing tool in your stack that could be extended?**
+>    The project directory is currently empty — is there a broader project this should fit into?
+>
+> 4. **Maintenance cost** — Building a custom tool means you own the maintenance. A one-liner with `wc` has zero maintenance. What would justify the custom approach?
+>
+> 5. **Who maintains it when requirements change?**
+>
+> 6. **Have you discussed this approach with another engineer?**
+>
+> Let me know your thoughts — especially on whether existing tools like `wc` cover your needs, or if there's a specific gap you're trying to fill.
 
 ### `checklist`
 
