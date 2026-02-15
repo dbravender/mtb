@@ -1,10 +1,8 @@
 # mtb (Make the Bed)
 
-An MCP server that gives AI coding agents awareness of what already exists in a codebase before they start generating new code. Built to combat the most common vibe coding failure mode: reinventing the wheel.
+In a Calvin and Hobbes strip, Calvin's mom tells him to make his bed. Rather than just do it, he spends the entire day building a robot to make the bed for him. The robot doesn't work, the bed never gets made, and Calvin is more exhausted than if he'd just done it himself.
 
-## Why
-
-AI coding agents will happily add a new dependency when one already exists, generate utility functions that duplicate existing ones, and produce thousands of lines of code without understanding the cost of maintaining them. mtb provides two tools that give agents the context they need to make better decisions.
+This is vibe coding in a nutshell. An AI agent will happily generate a JSON parser from scratch when you already have three in your dependencies, or add a new HTTP client library when one is sitting right there in your lock file. mtb is an MCP server that makes agents look before they leap — checking what code and dependencies already exist before generating more.
 
 ## Tools
 
