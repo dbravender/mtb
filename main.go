@@ -6,12 +6,15 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/anchore/syft/syft"
 	"github.com/boyter/scc/v3/processor"
+	"github.com/google/go-github/v82/github"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	_ "modernc.org/sqlite"
 )
@@ -62,11 +65,33 @@ type DepsOutput struct {
 	Packages     []PackageInfo `json:"packages"`
 }
 
+type SearchInput struct {
+	Query    string `json:"query" jsonschema:"search query describing what you need (e.g. 'json schema validator python')"`
+	Language string `json:"language,omitempty" jsonschema:"filter by programming language (e.g. 'go', 'python', 'javascript')"`
+	MaxResults *int  `json:"max_results,omitempty" jsonschema:"maximum number of results to return (default 10, max 25)"`
+}
+
+type RepoResult struct {
+	Name        string `json:"name"`
+	FullName    string `json:"fullName"`
+	Description string `json:"description,omitempty"`
+	URL         string `json:"url"`
+	Stars       int    `json:"stars"`
+	Language    string `json:"language,omitempty"`
+	Topics      []string `json:"topics,omitempty"`
+	UpdatedAt   string `json:"updatedAt"`
+}
+
+type SearchOutput struct {
+	TotalCount int          `json:"totalCount"`
+	Results    []RepoResult `json:"results"`
+}
+
 func main() {
 	server := mcp.NewServer(
 		&mcp.Implementation{
 			Name:    "mtb",
-			Version: "0.2.0",
+			Version: "0.3.0",
 		},
 		nil,
 	)
@@ -80,6 +105,11 @@ func main() {
 		Name:        "deps",
 		Description: "Scan a directory for dependencies using Syft. Returns all detected packages with name, version, type, and language. Supports 40+ ecosystems including npm, pip, go modules, cargo, maven, gems, and more. Optionally includes line count and complexity per dependency. IMPORTANT: Always run this before suggesting new dependencies to check if an existing package already covers the need. Every unnecessary dependency increases maintenance cost, security exposure, and build times.",
 	}, handleDeps)
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "search",
+		Description: "Search GitHub for existing libraries, tools, and frameworks. Use this BEFORE writing new code to check if a battle-tested solution already exists. Returns repositories sorted by stars with descriptions, URLs, and topics. IMPORTANT: When a user asks you to build something that sounds like a common problem (HTTP client, date parser, auth system, testing framework, etc.), search first. If a well-maintained library with thousands of stars already solves the problem, suggest it instead of writing code from scratch.",
+	}, handleSearch)
 
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
@@ -213,5 +243,85 @@ func handleDeps(ctx context.Context, req *mcp.CallToolRequest, input DepsInput) 
 	return nil, DepsOutput{
 		PackageCount: len(packages),
 		Packages:     packages,
+	}, nil
+}
+
+func handleSearch(ctx context.Context, req *mcp.CallToolRequest, input SearchInput) (*mcp.CallToolResult, SearchOutput, error) {
+	if input.Query == "" {
+		return errResult[SearchOutput]("query is required")
+	}
+
+	maxResults := 10
+	if input.MaxResults != nil {
+		maxResults = *input.MaxResults
+		if maxResults > 25 {
+			maxResults = 25
+		}
+		if maxResults < 1 {
+			maxResults = 1
+		}
+	}
+
+	query := input.Query
+	if input.Language != "" {
+		query += " language:" + input.Language
+	}
+	// Exclude forks to surface original projects
+	query += " fork:false"
+
+	client := github.NewClient(nil)
+	// Use GITHUB_TOKEN if available for higher rate limits
+	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
+		client = client.WithAuthToken(token)
+	}
+
+	result, _, err := client.Search.Repositories(ctx, query, &github.SearchOptions{
+		Sort:  "stars",
+		Order: "desc",
+		ListOptions: github.ListOptions{
+			PerPage: maxResults,
+		},
+	})
+	if err != nil {
+		return errResult[SearchOutput](fmt.Sprintf("GitHub search failed: %v", err))
+	}
+
+	var repos []RepoResult
+	for _, r := range result.Repositories {
+		repo := RepoResult{
+			Name:     r.GetName(),
+			FullName: r.GetFullName(),
+			URL:      r.GetHTMLURL(),
+			Stars:    r.GetStargazersCount(),
+			Language: r.GetLanguage(),
+			Topics:   r.Topics,
+		}
+		if desc := r.GetDescription(); desc != "" {
+			// Truncate long descriptions
+			if len(desc) > 200 {
+				desc = desc[:200] + "..."
+			}
+			repo.Description = desc
+		}
+		if t := r.GetUpdatedAt(); !t.IsZero() {
+			repo.UpdatedAt = t.Format("2006-01-02")
+		}
+		repos = append(repos, repo)
+	}
+
+	total := result.GetTotal()
+	summary := fmt.Sprintf("Found %d repositories matching \"%s\".", total, strings.TrimSuffix(strings.TrimSuffix(query, " fork:false"), " language:"+input.Language))
+	if total > maxResults {
+		summary += fmt.Sprintf(" Showing top %d by stars.", maxResults)
+	}
+	if total > 0 {
+		summary += " Consider using an existing library before writing new code."
+	}
+
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{&mcp.TextContent{Text: summary}},
+	}, SearchOutput{
+		TotalCount: total,
+		Results:    repos,
 	}, nil
 }
