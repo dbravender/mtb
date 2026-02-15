@@ -7,10 +7,14 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/boyter/scc/v3/processor"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
+
+// sccMu guards scc's global processor state against concurrent access.
+var sccMu sync.Mutex
 
 type StatsInput struct {
 	Path              string   `json:"path" jsonschema:"path to directory or file to analyze"`
@@ -48,6 +52,9 @@ func RunSCC(absPath string, cocomo, complexity bool, excludeDir, excludeExt, inc
 	tmpPath := tmpFile.Name()
 	tmpFile.Close()
 	defer os.Remove(tmpPath)
+
+	sccMu.Lock()
+	defer sccMu.Unlock()
 
 	processor.DirFilePaths = []string{absPath}
 	processor.Format = "json2"
