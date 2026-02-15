@@ -59,6 +59,7 @@ func RunSCC(absPath string, cocomo, complexity bool, excludeDir, excludeExt, inc
 	processor.DirFilePaths = []string{absPath}
 	processor.Format = "json2"
 	processor.FileOutput = tmpPath
+	// scc flags use negative semantics: true = disable the feature
 	processor.Cocomo = !cocomo
 	processor.Complexity = !complexity
 	processor.PathDenyList = excludeDir
