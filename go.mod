@@ -1,6 +1,6 @@
 module github.com/dbravender/mtb
 
-go 1.25.2
+go 1.26.0
 
 require (
 	github.com/anchore/syft v1.42.0
