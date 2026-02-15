@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/google/go-github/v82/github"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -97,7 +96,7 @@ func HandleSearch(ctx context.Context, req *mcp.CallToolRequest, input SearchInp
 	}
 
 	total := result.GetTotal()
-	summary := fmt.Sprintf("Found %d repositories matching \"%s\".", total, strings.TrimSuffix(strings.TrimSuffix(query, " fork:false"), " language:"+input.Language))
+	summary := fmt.Sprintf("Found %d repositories matching \"%s\".", total, input.Query)
 	if total > maxResults {
 		summary += fmt.Sprintf(" Showing top %d by stars.", maxResults)
 	}
