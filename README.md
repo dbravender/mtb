@@ -53,6 +53,23 @@ Add to `.claude/mcp.json` in your project (or `~/.claude/mcp.json` globally):
 go install github.com/dbravender/mtb@latest
 ```
 
+## Eating its own dog food
+
+Running mtb on itself:
+
+**stats:**
+
+| Language | Files | Code | Complexity |
+|----------|-------|------|------------|
+| Go       | 1     | 176  | 40         |
+| JSON     | 3     | 16   | 0          |
+
+Estimated cost: $4,776 | People: 0.24 | Schedule: 1.8 months
+
+**deps:** 564 packages detected
+
+Yes, a tool designed to warn about unnecessary dependencies ships with 564 transitive Go modules. The irony is not lost on me. Syft alone accounts for the vast majority — it brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. The tradeoff: 1 file of code, 176 lines, covers every ecosystem from npm to RPM. I'd rather import a battle-tested SBOM generator than write my own package-lock.json parser.
+
 ## License
 
 MIT
