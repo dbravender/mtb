@@ -5,6 +5,7 @@
 - `consult`: Push back on new features with structured questions before any code gets written
 - `stats`: Show complexity scores so users can weigh changes against future maintenance costs
 - `deps`: Know what's already in your project before adding more
+- `checklist`: Evaluate operational readiness before calling a project "done"
 
 In a Calvin and Hobbes strip, Calvin's mom tells him to make his bed. Rather than just do it, he spends the entire day building a robot to make the bed for him. The robot doesn't work, the bed never gets made, and Calvin is more exhausted than if he'd just done it himself.
 
@@ -53,6 +54,21 @@ mtb pushes back — and rightly so. Before writing any code, the agent presents 
 5. **Who maintains this when requirements change?** If this needs to be "production-ready," who owns it after v1?
 
 These aren't meant to block you — they're meant to make sure you're building the right thing.
+
+### `checklist`
+
+Evaluate a project's operational readiness. After shipping code, use this to check whether CI, monitoring, on-call, security, deployment, and documentation concerns have been addressed.
+
+**Parameters:**
+- `project` - description of the project being evaluated
+
+The checklist covers:
+1. **Automated tests / CI** — regression prevention and standards enforcement
+2. **Monitoring** — health checks, metrics, and alerts
+3. **On-call coverage / SLAs** — response time expectations and escalation
+4. **Security audit / automated scans** — vulnerability detection and isolation
+5. **Deployment pipeline / CD** — promotion to test and production environments
+6. **Documentation / runbooks** — onboarding, extension, and operational procedures
 
 ### `stats`
 

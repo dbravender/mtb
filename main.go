@@ -44,6 +44,11 @@ func main() {
 		Description: "Get a structured consultation before implementing a new feature or adding a dependency. Use this BEFORE writing any new feature code. Takes a problem description, scans the project for relevant existing dependencies, and returns a set of questions the agent MUST present to the user before proceeding. IMPORTANT: When a user asks you to build something non-trivial, call consult first. Present each returned question to the user and wait for their answers. Do NOT skip questions or proceed until the user has considered the tradeoffs.",
 	}, tools.HandleConsult)
 
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "checklist",
+		Description: "Evaluate a project's operational readiness. Use this before shipping code to check whether CI, monitoring, on-call, security, deployment, and documentation concerns are necessary and have been addressed. Returns checklist items the agent MUST present to the user. IMPORTANT: Present each item and wait for the user's answer before proceeding.",
+	}, tools.HandleChecklist)
+
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
 	}
