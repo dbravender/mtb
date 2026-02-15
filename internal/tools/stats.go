@@ -59,12 +59,17 @@ func RunSCC(absPath string, cocomo, complexity bool, excludeDir, excludeExt, inc
 	processor.AllowListExtensions = includeExt
 
 	oldStdout := os.Stdout
-	os.Stdout, _ = os.Open(os.DevNull)
+	devNull, err := os.Open(os.DevNull)
+	if err != nil {
+		return nil, err
+	}
+	os.Stdout = devNull
 
 	processor.ProcessConstants()
 	processor.Process()
 
 	os.Stdout = oldStdout
+	devNull.Close()
 
 	data, err := os.ReadFile(tmpPath)
 	if err != nil {
