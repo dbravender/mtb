@@ -1,0 +1,38 @@
+● Here's what I found — and some things worth considering before writing any code:
+
+  ---
+  Existing open-source survey tools you should evaluate first
+
+  These are well-known, battle-tested projects (my own knowledge, since GitHub search was limited):
+
+  ┌────────────────────────────────────┬───────────────────────────────────────────────────────────┬──────────────────┬──────────────────────────────────┐
+  │                Tool                │                        What it is                         │   Self-hosted?   │              Effort              │
+  ├────────────────────────────────────┼───────────────────────────────────────────────────────────┼──────────────────┼──────────────────────────────────┤
+  │ https://www.limesurvey.org/        │ Full-featured survey platform (PHP/MySQL). Huge feature   │ Yes              │ Medium — Docker available, but   │
+  │                                    │ set, used by universities and governments.                │                  │ heavy for a simple CSAT          │
+  ├────────────────────────────────────┼───────────────────────────────────────────────────────────┼──────────────────┼──────────────────────────────────┤
+  │ https://formbricks.com/            │ Modern, open-source survey tool (Next.js). Has NPS/CSAT   │ Yes              │ Low-Medium — Docker compose,     │
+  │                                    │ templates built in.                                       │                  │ nice UI                          │
+  ├────────────────────────────────────┼───────────────────────────────────────────────────────────┼──────────────────┼──────────────────────────────────┤
+  │ https://rallly.co/ /               │ Lighter form/survey builders, open-source                 │ Yes              │ Low-Medium                       │
+  │ https://heyform.net/               │                                                           │                  │                                  │
+  ├────────────────────────────────────┼───────────────────────────────────────────────────────────┼──────────────────┼──────────────────────────────────┤
+  │ Google Forms                       │ Free, no self-hosting needed, exports to Sheets           │ No (hosted by    │ Very low — zero code             │
+  │                                    │                                                           │ Google)          │                                  │
+  └────────────────────────────────────┴───────────────────────────────────────────────────────────┴──────────────────┴──────────────────────────────────┘
+
+  Key questions to consider
+
+  1. Is Google Forms good enough? It's free, has rating scales, comment boxes, and you can view results in Google Sheets. Zero maintenance. If the main goal is "don't pay for SurveyMonkey," this solves it today.
+  2. How many surveys/month are we talking about? If it's < 100/month, a custom-built tool is probably over-engineering. If it's thousands, a proper tool like Formbricks makes more sense.
+  3. Who maintains this long-term? A custom-built survey app needs someone to fix bugs, handle edge cases, and update dependencies. An existing tool has a community doing that for you.
+  4. Do you need email integration? Automatically sending surveys after ticket closure is a meaningful piece of work on top of the survey itself — it involves integrating with your ticketing system.
+  5. What does "simple report" mean to you? Average rating + comment list? Trends over time? Filtering by agent/team? This scopes the work significantly.
+
+  ---
+  My recommendation
+
+  - If you just need a survey link + basic results: use Google Forms or Formbricks (self-hosted). You'll be up and running in an hour with no code to maintain.
+  - If you want something minimal and fully custom: I can build a small Python or Node app with SQLite — but understand it'll need maintenance.
+
+  What's your preference? Should we go with an existing tool, or do you still want to build custom?

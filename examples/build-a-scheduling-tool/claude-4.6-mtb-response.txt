@@ -1,0 +1,29 @@
+● I want to flag some important considerations before we write any code here. There are well-known open-source alternatives that already solve this problem with years of battle-testing:
+
+  Existing Open-Source Solutions
+
+  1. https://cal.com (formerly Calendso) — ~35k+ GitHub stars
+    - Self-hostable, open-source Calendly alternative
+    - Google Calendar integration built-in
+    - Free to self-host, paid cloud option
+    - Active community, regular updates
+  2. https://easyappointments.org/ — Self-hosted appointment scheduling
+    - PHP-based, simpler to deploy
+    - Google Calendar sync
+  3. https://zcal.co/ — Free (not open-source, but no per-seat pricing)
+
+  Key Questions Before Building Custom
+
+  1. Have you looked at Cal.com? It's free to self-host and does exactly what you're describing — Google Calendar integration, configurable slot durations, booking pages. It would likely take less time to deploy than to build from scratch.
+  2. Maintenance cost — A custom booking system touching the Google Calendar API needs ongoing work: OAuth token refresh, handling API changes, timezone edge cases, race conditions on double-booking, DST transitions, cancellation/rescheduling flows, email notifications, etc. Who maintains this long-term?
+  3. Scope — "Just connect to Google Calendar and let people book" sounds simple, but production-quality scheduling involves: availability rules, buffer time between meetings, timezone handling, confirmation emails, cancellation links, preventing double-booking under concurrent requests, and Google API
+  quota management.
+  4. How many seats are we talking about? If it's 2-3 people, Cal.com's free self-hosted tier or even Calendly's free tier might work. The build-vs-buy math matters here.
+
+  My Recommendation
+
+  Self-host Cal.com with docker compose. You'd be up and running in under an hour with Google Calendar connected, rather than spending days building and then indefinitely maintaining a custom solution.
+
+  Would you like me to:
+  - A) Help you set up Cal.com (self-hosted) with Docker?
+  - B) Build a custom solution anyway, understanding the maintenance tradeoffs?

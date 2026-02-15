@@ -1,0 +1,1 @@
+I want a dashboard that shows our key business metrics - revenue, signups, churn, that kind of thing. It should pull from our Postgres database and update in real time. I'm tired of waiting on the data team to build Looker reports for me.

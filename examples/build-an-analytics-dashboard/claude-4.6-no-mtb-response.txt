@@ -1,0 +1,17 @@
+● This is a greenfield project — the directory is empty. Before I design an approach, I have some questions that will significantly shape the implementation.
+
+───────────────────────────────────────────────────────────────────────────────
+←  ☐ Stack  ☐ DB access  ☐ Refresh rate  ✔ Submit  →
+
+What tech stack do you prefer for the dashboard?
+
+❯ 1. Python (Dash/Plotly)
+     Fast to build, great charts out of the box, single process. Good for internal tools.
+  2. Next.js + React
+     Modern web app with TypeScript. More work upfront but very flexible UI.
+  3. Plain HTML + HTMX
+     Minimal dependencies, server-rendered, lightweight. Easy to deploy and maintain.
+  4. Type something.
+───────────────────────────────────────────────────────────────────────────────
+  5. Chat about this
+  6. Skip interview and plan immediately

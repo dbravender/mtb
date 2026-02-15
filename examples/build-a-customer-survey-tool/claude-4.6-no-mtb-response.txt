@@ -1,0 +1,20 @@
+● This is a fresh project directory. Before I design the solution, I have a few questions about your preferences:
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☐ Tech stack  ☐ Delivery  ☐ Rating scale  ✔ Submit  →
+
+What tech stack do you want this built with?
+
+❯ 1. Python (Flask)
+     Lightweight Python web app with SQLite. Easy to deploy, minimal dependencies.
+  2. Python (Django)
+     Full-featured Python framework with built-in admin panel for viewing results.
+  3. Node.js (Express)
+     JavaScript/Node backend with SQLite. Lightweight and fast.
+  4. Static HTML + JSON
+     Pure HTML/JS survey form that saves results to JSON files. Simplest possible, no framework.
+  5. Type something.
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  6. Chat about this
+  7. Skip interview and plan immediately
+
+Enter to select · Tab/Arrow keys to navigate · Esc to cancel

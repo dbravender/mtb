@@ -1,0 +1,17 @@
+● I'd be happy to build a simple internal wiki for your team. Let me plan this out first since it involves several components.
+
+───────────────────────────────────────────────────────────────────────────────
+←  ☐ Tech stack  ☐ Auth  ☐ Team size  ☐ Versioning  ✔ Submit  →
+
+What tech stack do you want for this wiki?
+
+❯ 1. Python (Flask/SQLite)
+     Lightweight, easy to deploy, single binary-like setup. Great for small-medium teams.
+  2. Node.js (Express/SQLite)
+     JavaScript everywhere, good if your team already works in JS/TS.
+  3. Go (single binary)
+     Compiles to a single binary, very fast, minimal dependencies.
+  4. Type something.
+───────────────────────────────────────────────────────────────────────────────
+  5. Chat about this
+  6. Skip interview and plan immediately

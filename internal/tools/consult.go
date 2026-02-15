@@ -47,7 +47,11 @@ func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultI
 
 	guidance := "IMPORTANT: Present each question above to the user and wait for their answers before proceeding. " +
 		"Do NOT skip questions or assume answers. The goal is to ensure the right problem is being solved " +
-		"with the right approach before any code is written."
+		"with the right approach before any code is written. " +
+		"ALSO: Use the search tool to find existing open-source projects, libraries, or SaaS products that already solve this problem. " +
+		"Present what you find to the user as alternatives before writing any code. " +
+		"Do this even if existingSolutions above is empty — the search may have failed due to rate limiting or query mismatch. " +
+		"Use your own knowledge of the problem domain to suggest well-known alternatives as well."
 
 	output := ConsultOutput{
 		ExistingSolutions: solutions,

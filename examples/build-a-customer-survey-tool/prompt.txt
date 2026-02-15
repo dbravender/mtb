@@ -1,0 +1,1 @@
+After each support interaction we want to send customers a quick satisfaction survey - just a few questions with a rating scale and optional comment box. Can you build that? We need to see the results in a simple report too. I don't want to pay for SurveyMonkey just for this.

@@ -1,0 +1,37 @@
+● I want to flag some important considerations before we write any code. There are several well-established open-source wikis that already do exactly what you're describing:
+
+  ┌──────────────────────────────────┬───────┬─────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │             Project              │ Stars │        Stack        │                                                 Notes                                                  │
+  ├──────────────────────────────────┼───────┼─────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ https://js.wiki                  │ ~15k+ │ Node.js, PostgreSQL │ Markdown, full-text search, granular permissions, LDAP/OAuth, beautiful UI. Free & open source.        │
+  ├──────────────────────────────────┼───────┼─────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ https://getoutline.com           │ ~30k+ │ Node.js, React      │ Markdown, real-time collab, team permissions, search, Slack integration. Very polished. Self-hostable. │
+  ├──────────────────────────────────┼───────┼─────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ https://www.bookstackapp.com     │ ~16k+ │ PHP, Laravel        │ Markdown + WYSIWYG, role-based permissions, full-text search. Easy to self-host.                       │
+  ├──────────────────────────────────┼───────┼─────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ https://github.com/gollum/gollum │ ~13k+ │ Ruby                │ Git-backed wiki, markdown, simple. Powers GitHub wikis.                                                │
+  └──────────────────────────────────┴───────┴─────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  These are battle-tested, maintained by large communities, and have all the features you listed (markdown, search, permissions) plus things you'll inevitably want later (versioning, SSO, API, backups).
+
+  Key questions to consider before building custom:
+
+  1. Have you evaluated these? Any of the above (especially Outline or Wiki.js) would likely take <1 hour to deploy via Docker vs. weeks to build and maintain a custom solution.
+  2. What's your maintenance plan? A custom wiki will need ongoing security patches, bug fixes, and feature requests from the team. Who owns that?
+  3. What's the real blocker with Confluence? If it's cost, Outline/BookStack are free. If it's UX, Outline is very clean. If it's hosting control, all of these self-host easily.
+───────────────────────────────────────────────────────────────────────────────
+ ☐ Approach
+
+Do you want to deploy an existing open-source wiki, or do you have specific reasons to build a custom one?
+
+❯ 1. Use Outline (Recommended)
+     Modern, polished, real-time collab, team permissions, markdown, search. Docker deploy in minutes.
+  2. Use Wiki.js
+     Feature-rich, granular permissions, supports multiple editors and auth methods. Also easy to self-host.
+  3. Use BookStack
+     Organized by shelves/books/chapters. Role-based access, great for structured docs like SOPs and runbooks.
+  4. Build custom
+     Full control but significant build + maintenance cost. Only recommended if existing tools truly don't fit.
+  5. Type something.
+───────────────────────────────────────────────────────────────────────────────
+  6. Chat about this

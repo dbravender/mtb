@@ -1,0 +1,32 @@
+● Before writing a single line of code, I want to make sure this is the right call. Here's what I'd consider:
+
+  Existing Open-Source HubSpot Alternatives
+
+  There are several mature, self-hosted options that already exist:
+
+  ┌──────────────────────────────────────────┬───────┬───────────────────────────────────────────────────────────────────────┐
+  │                 Project                  │ Stars │                            What it covers                             │
+  ├──────────────────────────────────────────┼───────┼───────────────────────────────────────────────────────────────────────┤
+  │ https://github.com/twentyhq/twenty       │ 25k+  │ Modern open-source CRM, very polished UI, built with TypeScript/React │
+  ├──────────────────────────────────────────┼───────┼───────────────────────────────────────────────────────────────────────┤
+  │ https://github.com/erxes/erxes           │ 3k+   │ Full HubSpot-style suite (CRM + marketing + sales)                    │
+  ├──────────────────────────────────────────┼───────┼───────────────────────────────────────────────────────────────────────┤
+  │ https://github.com/mautic/mautic         │ 7k+   │ Marketing automation specifically (emails, campaigns, lead scoring)   │
+  ├──────────────────────────────────────────┼───────┼───────────────────────────────────────────────────────────────────────┤
+  │ https://github.com/salesagility/SuiteCRM │ 4k+   │ Full-featured CRM, long track record                                  │
+  └──────────────────────────────────────────┴───────┴───────────────────────────────────────────────────────────────────────┘
+
+  Twenty in particular is worth a hard look — it's modern, TypeScript-based, has a great UI, and is actively maintained.
+
+  Questions to Think Through
+
+  Before building from scratch, a few things worth answering:
+
+  1. Which parts of HubSpot do you actually use? CRM? Email marketing? Sales pipeline? Landing pages? All of it? Narrowing scope is critical.
+  2. How many contacts/users are we talking about? This affects architecture choices significantly.
+  3. Is this for your own business, or a product you'd sell? Very different design constraints.
+  4. Maintenance reality check — HubSpot has hundreds of engineers. A from-scratch build means you own every bug, every email deliverability issue, every security patch. Are you prepared for
+  that ongoing cost?
+  5. Would self-hosting an existing open-source CRM (like Twenty) + customizing it get you 80% of the way there for a fraction of the effort?
+
+  I'm happy to help you build something if that's the right path — but I'd hate for you to spend weeks building what already exists. What are your thoughts?

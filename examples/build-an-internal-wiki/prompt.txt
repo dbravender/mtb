@@ -1,0 +1,1 @@
+We need a place for the team to write and share internal docs - SOPs, onboarding guides, runbooks. Confluence is so clunky and expensive. Can you build a simple wiki with search, markdown editing, and basic permissions so only certain teams can edit certain pages?

@@ -1,10 +1,10 @@
 # mtb (Make the Bed)
 
-`mtb` is an MCP server that intends to help agents and engineers look before they leap by leveraging existing battle-tested solutions so the focus can remain on the problem at hand.
+`mtb` is an MCP server that intends to help agents and engineers look before they leap by using the Socratic method to help users ask the right questions when building software and nudge them to use existing battle-tested solutions so the focus can remain on solving novel problems.
 
 - `consult`: Push back on new features with structured questions before any code gets written
 - `search`: Search for existing libraries rather than reinventing the wheel
-- `stats`: Track complexity costs to keep maintenance costs from ballooning
+- `stats`: Show complexity scores so users can weigh changes against future maintenance costs
 - `deps`: Know what's already in your project before adding more
 
 In a Calvin and Hobbes strip, Calvin's mom tells him to make his bed. Rather than just do it, he spends the entire day building a robot to make the bed for him. The robot doesn't work, the bed never gets made, and Calvin is more exhausted than if he'd just done it himself.
@@ -14,6 +14,21 @@ Most of the energy that goes into software is spent on debugging and maintenance
 AI agents will happily generate a bug-filled JSON parser from scratch when you already have three in your dependencies, or add a new HTTP client library when one is sitting right there in your lock file. And, if you ask it to build a rocketship when a perfectly cromulent open source rocketship is there for the taking, AI will happily help you build a new one.
 
 The hope is that, rather than fixing bugs or going down rabbit holes in bespoke implementations, `mtb` can help agents and engineers focus on the actual problem they are trying to solve: making the bed, and externalize some of the maintenance costs which can be massive for software.
+
+## Demonstration
+
+Without `mtb`, AI agents enthusiastically say "Great idea!" and start scaffolding projects immediately — database schemas, tech stacks, timelines, and all. With `mtb`, the agent stops and asks hard questions first.
+
+Each example below shows the same prompt sent to Claude Opus 4.6, with and without `mtb`:
+
+| Prompt | Without mtb | With mtb |
+|--------|------------|----------|
+| "We spend too much on Zendesk... build me a simple support ticket system" | [Asks what tech stack, starts building immediately.](examples/build-a-ticketing-system/claude-4.6-no-mtb-response.txt) | [Lists Zammad, osTicket, FreeScout, Peppermint. Asks: build custom or try OSS first?](examples/build-a-ticketing-system/claude-4.6-mtb-response.txt) |
+| "Calendly charges per seat... just make something that connects to Google Calendar" | [Asks what tech stack, starts planning architecture.](examples/build-a-scheduling-tool/claude-4.6-no-mtb-response.txt) | [Points to Cal.com (35k stars). Offers to help deploy it with Docker instead.](examples/build-a-scheduling-tool/claude-4.6-mtb-response.txt) |
+| "I want a dashboard... pull from our Postgres database in real time" | [Asks what tech stack, starts building immediately.](examples/build-an-analytics-dashboard/claude-4.6-no-mtb-response.txt) | [Tables Metabase, Superset, Grafana, Redash, Evidence. Running in < 1 hour.](examples/build-an-analytics-dashboard/claude-4.6-mtb-response.txt) |
+| "Confluence is clunky... build a simple wiki with search and permissions" | [Asks what tech stack, starts building immediately.](examples/build-an-internal-wiki/claude-4.6-no-mtb-response.txt) | [Lists Outline (30k stars), Wiki.js, BookStack, Gollum. Docker deploy in minutes.](examples/build-an-internal-wiki/claude-4.6-mtb-response.txt) |
+| "I don't want to pay for SurveyMonkey... build a customer survey tool" | [Asks what tech stack, starts building immediately.](examples/build-a-customer-survey-tool/claude-4.6-no-mtb-response.txt) | [Suggests Google Forms, Formbricks, LimeSurvey. Asks: is Google Forms good enough?](examples/build-a-customer-survey-tool/claude-4.6-mtb-response.txt) |
+| "Replace HubSpot... I can make something from scratch that looks better" | [Asks which features to replace, starts scoping immediately.](examples/replace-hubspot-with-custom-crm/claude-4.6-no-mtb-response.txt) | [Tables Twenty (25k stars), erxes, Mautic, SuiteCRM. Asks which parts you actually use.](examples/replace-hubspot-with-custom-crm/claude-4.6-mtb-response.txt) |
 
 ## Tools
 

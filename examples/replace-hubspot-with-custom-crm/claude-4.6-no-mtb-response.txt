@@ -1,0 +1,19 @@
+That's an ambitious but very doable project! HubSpot covers a lot of ground though - CRM, marketing automation, email, pipelines, analytics, etc. Let me ask a few questions to scope this out.
+
+───────────────────────────────────────────────────────────────────────────────
+←  ☐ Features  ☐ Tech stack  ☐ Database  ✔ Submit  →
+
+Which HubSpot features do you actually use and want to replace?
+
+❯ 1. [ ] CRM + Deals
+  Contact management, deal pipelines, company tracking
+  2. [ ] Email marketing
+  Email campaigns, templates, sequences, automation
+  3. [ ] Forms + Landing pages
+  Lead capture forms, landing page builder
+  4. [ ] All of the above
+  Full replacement - CRM, marketing, forms, the works
+  5. [ ] Type something
+     Next
+───────────────────────────────────────────────────────────────────────────────
+  6. Chat about this

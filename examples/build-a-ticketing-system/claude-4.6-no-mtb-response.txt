@@ -1,0 +1,20 @@
+● Good idea — let me ask a few questions to make sure I build the right thing for you.
+
+───────────────────────────────────────────────────────────────────────────────
+←  ☐ Tech stack  ☐ Email intake  ☐ Interface  ☐ Team size  ✔ Submit  →
+
+What tech stack do you want this built with?
+
+❯ 1. Python + FastAPI + SQLite
+     Lightweight, easy to deploy, minimal dependencies. Great for small teams.
+  2. Python + Django
+     Batteries-included framework with admin panel built in. More setup but more features
+     out of the box.
+  3. Node.js + Express + SQLite
+     JavaScript-based backend, lightweight and fast to build.
+  4. Go + SQLite
+     Single binary deployment, very fast, minimal resource usage.
+  5. Type something.
+───────────────────────────────────────────────────────────────────────────────
+  6. Chat about this
+  7. Skip interview and plan immediately

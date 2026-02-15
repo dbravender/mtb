@@ -1,0 +1,51 @@
+Before we write a single line of code, here are some things worth considering:
+
+Existing open-source alternatives to Zendesk
+
+  There are several mature, self-hosted helpdesk systems that already do exactly what you
+  described:
+
+  Project: Zammad
+  Stars: ~4k+
+  What it is: Full helpdesk with email, chat, phone. Ruby-based. Docker deploy.
+  ────────────────────────────────────────
+  Project: osTicket
+  Stars: ~3k+
+  What it is: Classic PHP ticket system. Email piping, assignment, SLAs. Very mature.
+  ────────────────────────────────────────
+  Project: FreeScout
+  Stars: ~3k+
+  What it is: Lightweight Zendesk/Help Scout alternative. PHP, email-focused.
+  ────────────────────────────────────────
+  Project: Peppermint
+  Stars: ~2k+
+  What it is: Modern, simple ticket system. Next.js + Prisma. Docker deploy.
+  ────────────────────────────────────────
+  Project: Trudesk
+  Stars: ~1k+
+  What it is: Node.js helpdesk. Real-time, email intake, assignment.
+
+  Any of these could be running in an afternoon with Docker and would give you email intake,
+   status tracking, and assignment out of the box — plus they have communities maintaining
+  them.
+
+  Key questions from the consult
+
+  Before going further, I want to make sure building custom is the right call:
+───────────────────────────────────────────────────────────────────────────────
+←  ☐ Build vs use  ☐ Volume  ☐ Team size  ✔ Submit  →
+
+Given these existing open-source options, do you still want to build custom? Building custom
+ means you own the maintenance long-term.
+
+❯ 1. Build custom
+     We build exactly what you need, nothing more. You own and maintain the code.
+  2. Try an OSS tool
+     Deploy something like FreeScout or Peppermint first. If it doesn't fit, then build
+     custom.
+  3. Not sure yet
+     Tell me more about the tradeoffs before I decide.
+  4. Type something.
+───────────────────────────────────────────────────────────────────────────────
+  5. Chat about this
+  6. Skip interview and plan immediately

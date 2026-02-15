@@ -1,0 +1,23 @@
+● This is a solid project - a self-hosted booking page that reads availability from Google Calendar and lets prospects book slots. There are several architectural decisions to make, so let me plan this out first.
+
+● Let me ask a few key questions to shape the architecture before I design the plan.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☐ Tech stack  ☐ Calendar  ☐ Deployment  ☐ Intake form  ✔ Submit  →
+
+What tech stack do you want for this? This affects deployment and maintenance complexity.
+
+❯ 1. Python (Flask)
+     Lightweight, easy to deploy. Good if the team already uses Python.
+  2. Node.js (Express)
+     Fast, async-friendly. Good if team uses JS/TS.
+  3. Go
+     Single binary, minimal dependencies, easy to deploy anywhere.
+  4. Next.js (React)
+     Full-stack React framework. Polished UI out of the box.
+  5. Type something.
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  6. Chat about this
+  7. Skip interview and plan immediately
+
+Enter to select · Tab/Arrow keys to navigate · Esc to cancel

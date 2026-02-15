@@ -1,0 +1,42 @@
+● This is an empty project, so there's no existing codebase to build on. Before I write any code, I want to flag some important questions and alternatives — building a custom dashboard is a significant commitment and there are mature tools that already do this well.
+
+  Existing tools worth considering first
+
+  These connect directly to Postgres and give you dashboards with no/low code:
+
+  ┌────────────┬─────────────────────┬─────────────────────────────────────────────────────┐
+  │    Tool    │        Model        │                    Key Strength                     │
+  ├────────────┼─────────────────────┼─────────────────────────────────────────────────────┤
+  │ Metabase   │ Open source         │ Dead simple setup, connects to Postgres in minutes, │
+  │            │ (self-hosted free)  │  auto-generates questions from your schema          │
+  ├────────────┼─────────────────────┼─────────────────────────────────────────────────────┤
+  │ Apache     │ Open source         │ More powerful/flexible, SQL-native, real-time       │
+  │ Superset   │ (self-hosted free)  │ capable                                             │
+  ├────────────┼─────────────────────┼─────────────────────────────────────────────────────┤
+  │ Grafana    │ Open source         │ Best for real-time/live-updating dashboards, great  │
+  │            │ (self-hosted free)  │ Postgres plugin                                     │
+  ├────────────┼─────────────────────┼─────────────────────────────────────────────────────┤
+  │ Redash     │ Open source         │ Lightweight, SQL-first, shareable dashboards        │
+  ├────────────┼─────────────────────┼─────────────────────────────────────────────────────┤
+  │ Evidence   │ Open source         │ Code-as-config BI using markdown + SQL              │
+  └────────────┴─────────────────────┴─────────────────────────────────────────────────────┘
+
+  Any of these can be running against your Postgres database in under an hour with no custom code to maintain.
+
+───────────────────────────────────────────────────────────────────────────────
+←  ☐ Approach  ☐ Refresh rate  ☐ Audience  ✔ Submit  →
+
+Would you prefer to use an existing open-source tool (Metabase, Grafana, Superset, etc.) or
+do you specifically want a custom-built dashboard?
+
+❯ 1. Existing tool (Recommended)
+     Use Metabase/Grafana/Superset — production-ready, maintained by large communities,
+     connects to Postgres natively. Running in < 1 hour.
+  2. Custom dashboard
+     Build from scratch. More control but you own all the maintenance, security, and future
+     feature work.
+  3. Not sure yet
+     Help me understand the tradeoffs before I decide.
+  4. Type something.
+───────────────────────────────────────────────────────────────────────────────
+  5. Chat about this

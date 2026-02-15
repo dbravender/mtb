@@ -1,0 +1,1 @@
+We spend too much on Zendesk and half the features we don't even use. Can you build me a simple support ticket system? Just needs email intake, status tracking, and a way to assign tickets to people on my team.

@@ -1,0 +1,1 @@
+Our sales team needs a booking page where prospects can pick a time on our calendar. Calendly charges per seat and it adds up. Can you just make something that connects to Google Calendar and lets people book 30 or 60 minute slots?
