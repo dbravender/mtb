@@ -36,7 +36,7 @@ func main() {
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "deps",
-		Description: "Scan a directory for dependencies using Syft. Returns all detected packages with name, version, type, and language. Supports 40+ ecosystems including npm, pip, go modules, cargo, maven, gems, and more. Optionally includes line count and complexity per dependency. IMPORTANT: Always run this before suggesting new dependencies to check if an existing package already covers the need. Every unnecessary dependency increases maintenance cost, security exposure, and build times.",
+		Description: "Prompt the agent to identify existing project dependencies before suggesting new ones. Returns guidance on which manifest files to check (go.mod, package.json, requirements.txt, Cargo.toml, etc.) and ecosystem-appropriate CLI tools for deeper analysis. IMPORTANT: Always run this before suggesting new dependencies to check if an existing package already covers the need. Every unnecessary dependency increases maintenance cost, security exposure, and build times.",
 	}, tools.HandleDeps)
 
 	mcp.AddTool(server, &mcp.Tool{

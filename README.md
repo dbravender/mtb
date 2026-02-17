@@ -3,7 +3,7 @@
 `mtb` is an MCP server that intends to help agents and engineers look before they leap by using the Socratic method to help users ask the right questions when building software and nudge them to use existing battle-tested solutions so the focus can remain on solving novel problems.
 
 - `consult`: Push back on new features with structured questions before any code gets written
-- `stats`: Show complexity scores so users can weigh changes against future maintenance costs
+- `stats`: Show complexity scores using an embedded [`scc`](https://github.com/boyter/scc) so users can weigh changes against future maintenance costs
 - `deps`: Know what's already in your project before adding more
 - `checklist`: Evaluate operational readiness before calling a project "done"
 - `compare`: Measure complexity impact of changes before committing
@@ -37,7 +37,7 @@ These tools are intended for use by AI agents.
 
 ### `consult`
 
-Get a structured consultation before implementing a new feature or adding a dependency. Combines GitHub search and dependency scanning with a 5 whys framework to actively push back and force deeper thinking about the actual problem before any code gets written.
+Get a structured consultation before implementing a new feature or adding a dependency. Uses a 5 whys framework to actively push back and force deeper thinking about the actual problem before any code gets written.
 
 **Parameters:**
 - `problem` - what the user wants to build or the problem they want to solve
@@ -107,11 +107,10 @@ Analyzes code in a directory using [scc](https://github.com/boyter/scc). Returns
 
 ### `deps`
 
-Scans a directory for dependencies using [Syft](https://github.com/anchore/syft). Returns all detected packages with name, version, type, and language. Supports 40+ ecosystems including npm, pip, go modules, cargo, maven, gems, and more.
+Prompt the agent to identify existing project dependencies before suggesting new ones. Returns guidance on which manifest files to check (go.mod, package.json, requirements.txt, Cargo.toml, etc.) and ecosystem-appropriate CLI tools for deeper analysis.
 
 **Parameters:**
 - `path` - directory to scan
-- `details` - include line count and complexity per dependency (default: false)
 
 ## Install
 
@@ -226,29 +225,27 @@ Running mtb on itself:
 
 | Language | Files | Code | Complexity |
 |----------|-------|------|------------|
-| Go       | 13    | 836  | 200        |
+| Go       | 13    | 630  | 134        |
 | YAML     | 3     | 83   | 0          |
-| Markdown | 2     | 194  | 0          |
+| Markdown | 2     | 201  | 0          |
 | Makefile | 1     | 14   | 0          |
 | License  | 1     | 17   | 0          |
 
-Estimated cost: $34,864 | People: 0.81 | Schedule: 3.8 months
+Estimated cost: $37,395 | People: 0.84 | Schedule: 3.9 months
 
-**deps:** 644 packages detected
-
-`mtb` ships with 644 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 6 source files, ~400 lines of production code, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
+**deps:** 2 direct dependencies, 24 transitive modules — `mtb` practices what it preaches by delegating dependency scanning to the agent's own tools rather than bundling a heavy SBOM library.
 
 **checklist:** When run on itself, mtb scores well — CI enforces `go vet`, `govulncheck`, build, and tests on every push; releases are fully automated via tag-triggered cross-compilation; and documentation covers every tool and 7 editor integrations. Monitoring and on-call don't apply to a local CLI tool.
 
-**compare:** Used while adding the `compare` tool itself:
+**compare:** Used while removing the Syft dependency and converting `deps`/`consult` to guidance-based tools:
 
 | Metric     | Before | After | Delta |
 |------------|--------|-------|-------|
-| Go code    | 766    | 836   | +70   |
-| Complexity | 189    | 200   | +11   |
-| Est. cost  | $32,714 | $34,864 | +$2,150 |
+| Go code    | 836    | 630   | -206  |
+| Complexity | 200    | 134   | -66   |
+| Est. cost  | $43,351 | $37,395 | -$5,956 |
 
-+70 lines and +11 complexity for a new tool following an established pattern — consistent with the project's existing per-tool cost.
+-206 lines and -66 complexity by delegating dependency scanning to the agent instead of bundling Syft. Transitive dependencies dropped from 288 to 24.
 
 ## License
 

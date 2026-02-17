@@ -13,7 +13,11 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// sccMu guards scc's global processor state against concurrent access.
+// sccMu guards scc's global processor state and the os.Stdout redirect
+// against concurrent access. The MCP StdioTransport captures os.Stdout at
+// connection time, so reassigning the variable does not affect transport
+// writes — but the mutex ensures scc calls are serialized and stdout is
+// restored reliably.
 var sccMu sync.Mutex
 
 type StatsInput struct {
@@ -66,18 +70,21 @@ func RunSCC(absPath string, cocomo, complexity bool, excludeDir, excludeExt, inc
 	processor.ExcludeListExtensions = excludeExt
 	processor.AllowListExtensions = includeExt
 
+	// Suppress scc's console output by redirecting os.Stdout to /dev/null.
+	// This is safe because StdioTransport.Connect() captures os.Stdout into
+	// a stored io.Writer at connection time — it does not re-read the variable.
+	// The deferred restore ensures stdout is recovered even if scc panics.
 	oldStdout := os.Stdout
 	devNull, err := os.Open(os.DevNull)
 	if err != nil {
 		return nil, err
 	}
+	defer devNull.Close()
 	os.Stdout = devNull
+	defer func() { os.Stdout = oldStdout }()
 
 	processor.ProcessConstants()
 	processor.Process()
-
-	os.Stdout = oldStdout
-	devNull.Close()
 
 	data, err := os.ReadFile(tmpPath)
 	if err != nil {

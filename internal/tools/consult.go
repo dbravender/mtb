@@ -5,12 +5,8 @@ package tools
 import (
 	"context"
 	"fmt"
-	"path/filepath"
-	"strings"
 
-	"github.com/anchore/syft/syft"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	_ "modernc.org/sqlite"
 )
 
 type ConsultInput struct {
@@ -20,9 +16,8 @@ type ConsultInput struct {
 }
 
 type ConsultOutput struct {
-	ExistingDeps []PackageInfo `json:"existingDeps"`
-	Questions    []string      `json:"questions"`
-	Guidance     string        `json:"guidance"`
+	Questions []string `json:"questions"`
+	Guidance  string   `json:"guidance"`
 }
 
 func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultInput) (*mcp.CallToolResult, ConsultOutput, error) {
@@ -30,14 +25,7 @@ func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultI
 		return ErrResult[ConsultOutput]("problem is required")
 	}
 
-	// Scan for existing dependencies if path provided
-	var relevantDeps []PackageInfo
-	if input.Path != "" {
-		relevantDeps = findRelevantDeps(ctx, input.Path, input.Problem)
-	}
-
-	// Build contextualized 5 whys questions
-	questions := buildQuestions(input.Problem, relevantDeps)
+	questions := buildQuestions(input.Problem)
 
 	guidance := "IMPORTANT: Present each question above to the user and wait for their answers before proceeding. " +
 		"Do NOT skip questions or assume answers. The goal is to ensure the right problem is being solved " +
@@ -46,16 +34,17 @@ func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultI
 		"Present what you find to the user as alternatives before writing any code. " +
 		"Use your own knowledge of the problem domain to suggest well-known alternatives as well."
 
+	if input.Path != "" {
+		guidance += fmt.Sprintf(" Read the dependency manifest files in %q (e.g. go.mod, package.json, requirements.txt) "+
+			"to identify existing dependencies that might already handle this use case.", input.Path)
+	}
+
 	output := ConsultOutput{
-		ExistingDeps: relevantDeps,
-		Questions:    questions,
-		Guidance:     guidance,
+		Questions: questions,
+		Guidance:  guidance,
 	}
 
 	summary := fmt.Sprintf("Consultation for: %q\n", input.Problem)
-	if len(relevantDeps) > 0 {
-		summary += fmt.Sprintf("Found %d potentially relevant dependencies already in your project.\n", len(relevantDeps))
-	}
 	summary += fmt.Sprintf("Generated %d questions to consider before proceeding.", len(questions))
 
 	return &mcp.CallToolResult{
@@ -63,101 +52,14 @@ func HandleConsult(ctx context.Context, req *mcp.CallToolRequest, input ConsultI
 	}, output, nil
 }
 
-func findRelevantDeps(ctx context.Context, path, problem string) []PackageInfo {
-	absPath, err := filepath.Abs(path)
-	if err != nil {
-		return nil
-	}
-
-	src, err := syft.GetSource(ctx, absPath, syft.DefaultGetSourceConfig().WithSources("dir"))
-	if err != nil {
-		return nil
-	}
-	defer src.Close()
-
-	s, err := syft.CreateSBOM(ctx, src, syft.DefaultCreateSBOMConfig())
-	if err != nil {
-		return nil
-	}
-
-	if s.Artifacts.Packages == nil {
-		return nil
-	}
-
-	keywords := extractKeywords(problem)
-	var relevant []PackageInfo
-	for _, p := range s.Artifacts.Packages.Sorted() {
-		nameLower := strings.ToLower(p.Name)
-		for _, kw := range keywords {
-			if strings.Contains(nameLower, kw) {
-				info := PackageInfo{
-					Name:     p.Name,
-					Version:  p.Version,
-					Type:     string(p.Type),
-					Language: string(p.Language),
-				}
-				locs := p.Locations.ToSlice()
-				if len(locs) > 0 {
-					info.Location = locs[0].RealPath
-				}
-				relevant = append(relevant, info)
-				break
-			}
-		}
-	}
-	return relevant
-}
-
-// extractKeywords splits the problem into lowercase keywords, filtering out short/common words.
-func extractKeywords(problem string) []string {
-	stopWords := map[string]bool{
-		"i": true, "a": true, "an": true, "the": true, "to": true,
-		"need": true, "want": true, "for": true, "and": true, "or": true,
-		"in": true, "of": true, "is": true, "it": true, "my": true,
-		"with": true, "that": true, "this": true, "from": true, "be": true,
-		"do": true, "we": true, "me": true, "so": true, "on": true,
-		"how": true, "can": true, "should": true, "would": true, "could": true,
-	}
-
-	words := strings.Fields(strings.ToLower(problem))
-	var keywords []string
-	for _, w := range words {
-		if len(w) < 2 {
-			continue
-		}
-		if stopWords[w] {
-			continue
-		}
-		keywords = append(keywords, w)
-	}
-	return keywords
-}
-
-func buildQuestions(problem string, deps []PackageInfo) []string {
-	questions := []string{
+func buildQuestions(problem string) []string {
+	return []string{
 		fmt.Sprintf("What is the actual problem you are trying to solve? (Restate the root cause behind %q)", problem),
 		"Search for existing SaaS products and open-source projects that solve this problem. What did you find, and why can't any of them work?",
-	}
-
-	if len(deps) > 0 {
-		names := make([]string, len(deps))
-		for i, d := range deps {
-			names[i] = d.Name
-		}
-		questions = append(questions,
-			fmt.Sprintf("You already have %s in your project — could any of these handle this use case?",
-				strings.Join(names, ", ")))
-	} else {
-		questions = append(questions,
-			"No existing dependencies seem related. Are you sure there isn't an existing tool in your stack that could be extended?")
-	}
-
-	questions = append(questions,
+		"Check the project's existing dependencies — could any of them already handle this use case?",
 		"Are you sure you are solving the right problem?",
 		"Have you spoken to another engineer about this problem and the solution you are working on?",
 		"What is the maintenance cost of building this yourself vs. using an existing solution?",
 		"If you build this, who will maintain it when the requirements change?",
-	)
-
-	return questions
+	}
 }

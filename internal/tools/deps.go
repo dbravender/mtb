@@ -4,31 +4,17 @@ package tools
 
 import (
 	"context"
-	"os"
-	"path/filepath"
+	"fmt"
 
-	"github.com/anchore/syft/syft"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	_ "modernc.org/sqlite"
 )
 
 type DepsInput struct {
-	Path    string `json:"path" jsonschema:"path to directory to scan for dependencies"`
-	Details *bool  `json:"details,omitempty" jsonschema:"include line count and complexity per dependency from scc (default false)"`
-}
-
-type PackageInfo struct {
-	Name     string       `json:"name"`
-	Version  string       `json:"version"`
-	Type     string       `json:"type"`
-	Language string       `json:"language,omitempty"`
-	Location string       `json:"location,omitempty"`
-	Analysis *StatsOutput `json:"analysis,omitempty"`
+	Path string `json:"path" jsonschema:"path to directory to scan for dependencies"`
 }
 
 type DepsOutput struct {
-	PackageCount int           `json:"packageCount"`
-	Packages     []PackageInfo `json:"packages"`
+	Guidance string `json:"guidance"`
 }
 
 func HandleDeps(ctx context.Context, req *mcp.CallToolRequest, input DepsInput) (*mcp.CallToolResult, DepsOutput, error) {
@@ -37,56 +23,43 @@ func HandleDeps(ctx context.Context, req *mcp.CallToolRequest, input DepsInput) 
 		path = "."
 	}
 
-	absPath, err := filepath.Abs(path)
-	if err != nil {
-		return ErrResult[DepsOutput]("invalid path: " + err.Error())
+	guidance := fmt.Sprintf(`IMPORTANT: You must identify the existing dependencies in %q before suggesting any new ones. Follow these steps:
+
+1. **Identify the ecosystem.** Look for dependency manifest files such as:
+   - Go: go.mod
+   - Node.js: package.json, package-lock.json
+   - Python: requirements.txt, pyproject.toml, Pipfile, setup.py
+   - Rust: Cargo.toml
+   - Java/Kotlin: pom.xml, build.gradle, build.gradle.kts
+   - Ruby: Gemfile
+   - PHP: composer.json
+   - .NET: *.csproj, packages.config
+   - Swift: Package.swift
+   - Elixir: mix.exs
+
+2. **Read the manifest files** to enumerate direct dependencies with their versions.
+
+3. **Present the dependencies** to the user organized by ecosystem with name, version, and type.
+
+4. **Flag concerns.** Highlight any outdated versions, duplicate functionality, or dependencies that could be consolidated.
+
+For a deeper analysis (transitive dependencies, vulnerability scanning), suggest appropriate CLI tools for the ecosystem:
+   - General: syft (SBOM generation for 40+ ecosystems)
+   - Go: go list -m all, govulncheck
+   - Node.js: npm ls --all, npm audit
+   - Python: pip list, pip-audit
+   - Rust: cargo tree, cargo audit
+   - Java: mvn dependency:tree, gradle dependencies
+
+Every unnecessary dependency increases maintenance cost, security exposure, and build times. Present findings before suggesting additions.`, path)
+
+	output := DepsOutput{
+		Guidance: guidance,
 	}
 
-	src, err := syft.GetSource(ctx, absPath, syft.DefaultGetSourceConfig().WithSources("dir"))
-	if err != nil {
-		return ErrResult[DepsOutput]("failed to get source: " + err.Error())
-	}
-	defer src.Close()
+	summary := fmt.Sprintf("Dependency scan guidance for: %q\nRead manifest files and present existing dependencies before suggesting new ones.", path)
 
-	s, err := syft.CreateSBOM(ctx, src, syft.DefaultCreateSBOMConfig())
-	if err != nil {
-		return ErrResult[DepsOutput]("failed to scan dependencies: " + err.Error())
-	}
-
-	if s.Artifacts.Packages == nil {
-		return nil, DepsOutput{PackageCount: 0, Packages: []PackageInfo{}}, nil
-	}
-
-	wantDetails := input.Details != nil && *input.Details
-
-	var packages []PackageInfo
-	for _, p := range s.Artifacts.Packages.Sorted() {
-		info := PackageInfo{
-			Name:     p.Name,
-			Version:  p.Version,
-			Type:     string(p.Type),
-			Language: string(p.Language),
-		}
-
-		locs := p.Locations.ToSlice()
-		if len(locs) > 0 {
-			info.Location = locs[0].RealPath
-		}
-
-		if wantDetails && info.Location != "" {
-			depDir := filepath.Join(absPath, filepath.Dir(info.Location))
-			if stat, statErr := os.Stat(depDir); statErr == nil && stat.IsDir() {
-				if analysis, sccErr := RunSCC(depDir, false, true, nil, nil, nil); sccErr == nil {
-					info.Analysis = analysis
-				}
-			}
-		}
-
-		packages = append(packages, info)
-	}
-
-	return nil, DepsOutput{
-		PackageCount: len(packages),
-		Packages:     packages,
-	}, nil
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{&mcp.TextContent{Text: summary}},
+	}, output, nil
 }
