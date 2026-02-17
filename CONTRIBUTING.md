@@ -2,7 +2,7 @@
 
 ## Philosophy
 
-Keep it light. mtb wraps existing tools (scc, syft) rather than reimplementing them. New features should follow this pattern.
+Keep it light. mtb wraps existing tools rather than reimplementing them. New features should follow this pattern.
 
 ## Before Contributing
 
