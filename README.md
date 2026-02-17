@@ -6,6 +6,7 @@
 - `stats`: Show complexity scores so users can weigh changes against future maintenance costs
 - `deps`: Know what's already in your project before adding more
 - `checklist`: Evaluate operational readiness before calling a project "done"
+- `compare`: Measure complexity impact of changes before committing
 
 In a Calvin and Hobbes strip, Calvin's mom tells him to make his bed. Rather than just do it, he spends the entire day building a robot to make the bed for him. The robot doesn't work, the bed never gets made, and Calvin is more exhausted than if he'd just done it himself.
 
@@ -84,6 +85,13 @@ The checklist covers:
 4. **Security audit / automated scans** — vulnerability detection and isolation
 5. **Deployment pipeline / CD** — promotion to test and production environments
 6. **Documentation / runbooks** — onboarding, extension, and operational procedures
+
+### `compare`
+
+Prompt the agent to measure the complexity impact of code changes. The agent runs `stats` before and after changes, presents a before/after delta of lines of code, complexity, and estimated cost, and asks the user whether the added complexity is justified.
+
+**Parameters:**
+- `project` - description of the project being evaluated
 
 ### `stats`
 
@@ -218,19 +226,29 @@ Running mtb on itself:
 
 | Language | Files | Code | Complexity |
 |----------|-------|------|------------|
-| Go       | 11    | 766  | 189        |
-| YAML     | 3     | 82   | 0          |
-| Markdown | 1     | 156  | 0          |
+| Go       | 13    | 836  | 200        |
+| YAML     | 3     | 83   | 0          |
+| Markdown | 2     | 194  | 0          |
 | Makefile | 1     | 14   | 0          |
 | License  | 1     | 17   | 0          |
 
-Estimated cost: $28,008 | People: 0.70 | Schedule: 3.5 months
+Estimated cost: $34,864 | People: 0.81 | Schedule: 3.8 months
 
 **deps:** 644 packages detected
 
 `mtb` ships with 644 transitive Go modules — nearly all from Syft, which brings in container runtimes, cloud SDKs, and archive format parsers to support 40+ package ecosystems. This is `mtb` practicing what it preaches: 6 source files, ~400 lines of production code, covering every ecosystem from npm to RPM by building on top of existing tools rather than reinventing them.
 
 **checklist:** When run on itself, mtb scores well — CI enforces `go vet`, `govulncheck`, build, and tests on every push; releases are fully automated via tag-triggered cross-compilation; and documentation covers every tool and 7 editor integrations. Monitoring and on-call don't apply to a local CLI tool.
+
+**compare:** Used while adding the `compare` tool itself:
+
+| Metric     | Before | After | Delta |
+|------------|--------|-------|-------|
+| Go code    | 766    | 836   | +70   |
+| Complexity | 189    | 200   | +11   |
+| Est. cost  | $32,714 | $34,864 | +$2,150 |
+
++70 lines and +11 complexity for a new tool following an established pattern — consistent with the project's existing per-tool cost.
 
 ## License
 

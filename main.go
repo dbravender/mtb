@@ -49,6 +49,11 @@ func main() {
 		Description: "Evaluate a project's operational readiness. Use this before shipping code to check whether CI, monitoring, on-call, security, deployment, and documentation concerns are necessary and have been addressed. Returns checklist items the agent MUST present to the user. IMPORTANT: Present each item and wait for the user's answer before proceeding.",
 	}, tools.HandleChecklist)
 
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "compare",
+		Description: "Prompt the agent to measure the complexity impact of code changes. Use this after completing a task to check whether the changes increased complexity. Instructs the agent to run stats before and after changes, compare lines of code, complexity, and estimated cost, then present the delta to the user. IMPORTANT: The agent MUST present the before/after comparison and discuss whether the added complexity is justified.",
+	}, tools.HandleCompare)
+
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
 	}
