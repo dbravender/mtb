@@ -54,6 +54,11 @@ func main() {
 		Description: "Prompt the agent to measure the complexity impact of code changes. Use this after completing a task to check whether the changes increased complexity. Instructs the agent to run stats before and after changes, compare lines of code, complexity, and estimated cost, then present the delta to the user. IMPORTANT: The agent MUST present the before/after comparison and discuss whether the added complexity is justified.",
 	}, tools.HandleCompare)
 
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "hotspot",
+		Description: "Find files that are both complex and frequently changed — the highest-risk refactoring targets. Combines git commit history (churn) with cyclomatic complexity (scc) to score each file. Use this to prioritize technical debt work, scope refactors, or assess risk before modifying a subsystem. IMPORTANT: This requires the path to be inside a git repository.",
+	}, tools.HandleHotspot)
+
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
 	}
